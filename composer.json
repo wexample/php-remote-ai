@@ -1,5 +1,6 @@
 {
   "name": "wexample/php-remote-ai",
+  "description": "The models an AI provider offers — OpenAI and the services speaking its api, Anthropic, Ollama —, as php-api clients",
   "version": "1.0.1",
   "type": "library",
   "license": "MIT",
@@ -7,5 +8,9 @@
     "psr-4": {
       "Wexample\\PhpRemoteAi\\": "src/"
     }
+  },
+  "require": {
+    "php": ">=8.5",
+    "wexample/php-api": ">=5.0.6"
   }
 }
