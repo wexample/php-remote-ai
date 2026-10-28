@@ -29,9 +29,46 @@ class OpenAiClient extends Client implements ModelProviderClientInterface
                 createdAt: isset($item['created']) ? (new DateTimeImmutable())->setTimestamp((int) $item['created']) : null,
                 ownedBy: $item['owned_by'] ?? null,
                 raw: $item,
+                capabilities: $this->readCapabilities($item),
             );
         }
 
         return $models;
+    }
+
+    /**
+     * OpenAI says nothing of what its models can do; OpenRouter, speaking its
+     * api, lists the parameters each one takes and what it reads.
+     *
+     * @param array<string, mixed> $item
+     *
+     * @return list<string>|null
+     */
+    private function readCapabilities(array $item): ?array
+    {
+        if (! isset($item['supported_parameters'])) {
+            return null;
+        }
+
+        $parameters = $item['supported_parameters'];
+        $capabilities = [RemoteModel::CAPABILITY_COMPLETION];
+
+        if (in_array('tools', $parameters, true)) {
+            $capabilities[] = RemoteModel::CAPABILITY_TOOLS;
+        }
+
+        if (in_array('temperature', $parameters, true)) {
+            $capabilities[] = RemoteModel::CAPABILITY_TEMPERATURE;
+        }
+
+        if (in_array('reasoning', $parameters, true) || in_array('include_reasoning', $parameters, true)) {
+            $capabilities[] = RemoteModel::CAPABILITY_THINKING;
+        }
+
+        if (in_array('image', $item['architecture']['input_modalities'] ?? [], true)) {
+            $capabilities[] = RemoteModel::CAPABILITY_VISION;
+        }
+
+        return $capabilities;
     }
 }

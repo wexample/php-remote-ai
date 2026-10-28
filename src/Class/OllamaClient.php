@@ -28,9 +28,24 @@ class OllamaClient extends Client implements ModelProviderClientInterface
                 createdAt: isset($item['modified_at']) ? new DateTimeImmutable($item['modified_at']) : null,
                 size: isset($item['size']) ? (int) $item['size'] : null,
                 raw: $item,
+                capabilities: $this->readCapabilities($item['name']),
             );
         }
 
         return $models;
+    }
+
+    /**
+     * What a pulled model can do, as Ollama reads it from its template
+     * (`completion`, `tools`, `vision`, `thinking`, `embedding`); every model it
+     * runs takes a temperature.
+     *
+     * @return list<string>|null
+     */
+    public function readCapabilities(string $name): ?array
+    {
+        $capabilities = $this->requestJson('POST', 'api/show', ['json' => ['model' => $name]])['capabilities'] ?? null;
+
+        return null === $capabilities ? null : [...$capabilities, RemoteModel::CAPABILITY_TEMPERATURE];
     }
 }
