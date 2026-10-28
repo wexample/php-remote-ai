@@ -1,7 +1,7 @@
 {
   "name": "wexample/php-remote-ai",
   "description": "The models an AI provider offers — OpenAI and the services speaking its api, Anthropic, Ollama —, as php-api clients",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "type": "library",
   "license": "MIT",
   "autoload": {
