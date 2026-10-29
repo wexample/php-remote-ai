@@ -1,6 +1,6 @@
 # php-remote-ai
 
-Version: 3.0.0
+Version: 4.0.0
 
 The models an AI provider offers — OpenAI and the services speaking its api, Anthropic, Ollama —, as php-api clients
 
